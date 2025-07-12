@@ -1,0 +1,177 @@
+BUSINESS MANAGEMENT SYSTEM - DEPLOYMENT GUIDE
+==============================================
+
+QUICK START GUIDE
+==================
+
+1. SINGLE COMPUTER SETUP (Standalone)
+--------------------------------------
+   a) Install SQL Server Express 2019 (free)
+      - Download from: https://www.microsoft.com/en-us/sql-server/sql-server-downloads
+      - Choose "Express" edition
+      - During installation, enable "Mixed Mode Authentication"
+      - Set SA password (remember this!)
+
+   b) Install .NET 6.0 Runtime
+      - Download from: https://dotnet.microsoft.com/download/dotnet/6.0
+      - Choose "Desktop Runtime" for Windows
+
+   c) Setup Database
+      - Open SQL Server Management Studio (SSMS)
+      - Connect using: Server=(local), Authentication=Windows Authentication
+      - Open and execute: Database/CreateDatabase.sql
+      - Verify database "BusinessManagementDB" is created
+
+   d) Configure Application
+      - Edit appsettings.json
+      - Update company information
+      - Connection string should be:
+        "Server=(local);Database=BusinessManagementDB;Integrated Security=true;TrustServerCertificate=true;"
+
+   e) Run Application
+      - Double-click BusinessManagementSystem.exe
+      - Login: admin / admin123
+      - Change password immediately!
+
+2. MULTI-COMPUTER SETUP (Network)
+----------------------------------
+   SERVER COMPUTER:
+   a) Install SQL Server (Express or Standard)
+   b) Enable TCP/IP in SQL Server Configuration Manager
+   c) Configure Windows Firewall to allow SQL Server (port 1433)
+   d) Create database using CreateDatabase.sql
+   e) Create SQL login for client computers:
+      CREATE LOGIN [BusinessUser] WITH PASSWORD = 'YourStrongPassword123'
+      USE BusinessManagementDB
+      CREATE USER [BusinessUser] FOR LOGIN [BusinessUser]
+      ALTER ROLE db_datareader ADD MEMBER [BusinessUser]
+      ALTER ROLE db_datawriter ADD MEMBER [BusinessUser]
+      ALTER ROLE db_ddladmin ADD MEMBER [BusinessUser]
+
+   CLIENT COMPUTERS:
+   a) Install .NET 6.0 Runtime only
+   b) Copy application files (no SQL Server needed)
+   c) Update appsettings.json with server connection:
+      "Server=SERVER_IP_ADDRESS;Database=BusinessManagementDB;User Id=BusinessUser;Password=YourStrongPassword123;TrustServerCertificate=true;"
+   d) Test connection by running application
+
+3. CONNECTION STRING EXAMPLES
+------------------------------
+   Local SQL Server (Windows Auth):
+   "Server=(local);Database=BusinessManagementDB;Integrated Security=true;TrustServerCertificate=true;"
+
+   Local SQL Server (SQL Auth):
+   "Server=(local);Database=BusinessManagementDB;User Id=sa;Password=YourPassword;TrustServerCertificate=true;"
+
+   Remote SQL Server:
+   "Server=192.168.1.100;Database=BusinessManagementDB;User Id=BusinessUser;Password=YourPassword;TrustServerCertificate=true;"
+
+   SQL Server Express with Instance:
+   "Server=COMPUTERNAME\\SQLEXPRESS;Database=BusinessManagementDB;Integrated Security=true;TrustServerCertificate=true;"
+
+4. TROUBLESHOOTING
+------------------
+   Problem: Cannot connect to database
+   Solution: 
+   - Check if SQL Server service is running
+   - Verify connection string syntax
+   - Test connection using SSMS first
+   - Check firewall settings for remote connections
+
+   Problem: Login failed for user
+   Solution:
+   - Verify username/password in appsettings.json
+   - Check SQL Server authentication mode
+   - Ensure user has proper database permissions
+
+   Problem: PDF files not generating
+   Solution:
+   - Check application folder permissions
+   - Ensure Receipts folder can be created
+   - Verify sufficient disk space
+
+   Problem: Application won't start
+   Solution:
+   - Install .NET 6.0 Runtime
+   - Check all DLL files are present
+   - Run from command prompt to see error messages
+
+5. SECURITY RECOMMENDATIONS
+---------------------------
+   - Change default admin password immediately
+   - Use strong passwords for SQL Server accounts
+   - Enable Windows Firewall and configure properly
+   - Regular database backups
+   - Limit user permissions to required databases only
+   - Use Windows Authentication when possible
+   - Keep SQL Server and .NET Runtime updated
+
+6. BACKUP STRATEGY
+------------------
+   Database Backup (SQL Server):
+   BACKUP DATABASE BusinessManagementDB 
+   TO DISK = 'C:\Backup\BusinessManagementDB_YYYYMMDD.bak'
+
+   Application Backup:
+   - Copy entire application folder
+   - Include appsettings.json with configurations
+   - Document any customizations made
+
+7. PERFORMANCE OPTIMIZATION
+---------------------------
+   - Regular database maintenance (update statistics, reindex)
+   - Monitor database size and growth
+   - Archive old order data if needed
+   - Ensure adequate hardware resources
+   - Network optimization for multi-computer setups
+
+8. USER MANAGEMENT
+------------------
+   Default Users:
+   - admin / admin123 (Admin role)
+
+   To add new users:
+   - Currently done through database directly
+   - INSERT INTO Users (Username, Password, Role, FullName, Email)
+     VALUES ('newuser', 'password', 'User', 'Full Name', 'email@company.com')
+
+9. CUSTOMIZATION
+----------------
+   Company Information:
+   - Edit appsettings.json
+   - Update CompanyName, CompanyAddress, CompanyPhone
+   - Changes reflect in PDF receipts
+
+   Pricing Rules:
+   - Managed through Category Management in application
+   - Set percentage increases per category
+   - Additional per-product adjustments available
+
+10. MAINTENANCE SCHEDULE
+------------------------
+    Daily:
+    - Monitor application performance
+    - Backup critical data
+
+    Weekly:
+    - Review order history and reports
+    - Check inventory levels
+    - Update product information
+
+    Monthly:
+    - Database maintenance and optimization
+    - Review user accounts and permissions
+    - Archive old data if needed
+
+    Quarterly:
+    - Full system backup
+    - Security review
+    - Performance assessment
+
+SUPPORT CONTACT
+===============
+For technical support, please refer to the system administrator or IT department.
+Keep this document with the application installation for future reference.
+
+VERSION: 1.0
+DATE: 2024

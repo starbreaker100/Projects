@@ -1,0 +1,32 @@
+Business Management System - Installer Package
+Generated: 2024-12-19
+
+Package Contents:
+- Install.bat - Main installer (run as administrator)
+- Install-Silent.bat - Silent installer for automation
+- setup.ps1 - PowerShell installer script
+- Check-Requirements.ps1 - System requirements checker
+- INSTALLATION_GUIDE.md - Comprehensive installation guide
+- README_INSTALLER.md - Quick start guide
+- BusinessManagementSystem/ - Application files and database scripts
+
+Installation Instructions:
+1. Extract all files to a folder
+2. Right-click Install.bat and select "Run as administrator"
+3. Follow the on-screen prompts
+4. Launch the application from the desktop shortcut
+
+System Requirements:
+- Windows 10 or later
+- 4 GB RAM (8 GB recommended)
+- 5 GB free disk space
+- Internet connection (for downloading dependencies)
+- Administrator privileges
+
+Default Login Credentials:
+- Username: admin
+- Password: admin123
+
+IMPORTANT: Change default passwords after installation!
+
+For detailed instructions, see INSTALLATION_GUIDE.md
